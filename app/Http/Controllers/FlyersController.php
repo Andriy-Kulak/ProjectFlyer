@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Flyer;
 use Illuminate\Http\Request;
-use App\Http\Requests;
+use App\Http\Requests\FlyerRequest;
 use App\Http\Controllers\Controller;
+use App\Http;
+
 
 class FlyersController extends Controller
 {
@@ -25,6 +27,7 @@ class FlyersController extends Controller
      */
     public function create()
     {
+        //flash()->overlay('Hello World', 'this is the message');
         return view('flyers.create');
     }
 
@@ -34,9 +37,16 @@ class FlyersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FlyerRequest $request)
     {
-        //
+
+        //persist the flyer
+        Flyer::create($request->all());
+
+        //flash messaging
+        flash()->success('Success!', 'Your flyer has been created.');
+
+        return redirect()->back();//temporary redirect the landing page
     }
 
     /**
@@ -45,9 +55,13 @@ class FlyersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($zip, $street)
     {
-        //
+
+        $flyer = Flyer::locatedAt($zip, $street)->first();
+
+        return view('flyers.show', compact('flyer'));
+
     }
 
     /**
