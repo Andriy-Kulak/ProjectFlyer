@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\FlyerRequest;
 use App\Http\Controllers\Controller;
 use App\Http;
+use App\Photo;
 
 
 class FlyersController extends Controller
@@ -27,7 +28,7 @@ class FlyersController extends Controller
      */
     public function create()
     {
-        //flash()->overlay('Hello World', 'this is the message');
+        flash()->overlay('Hello World', 'this is the message');
         return view('flyers.create');
     }
 
@@ -57,11 +58,31 @@ class FlyersController extends Controller
      */
     public function show($zip, $street)
     {
-
-        $flyer = Flyer::locatedAt($zip, $street)->first();
+        //find the new flyer
+        $flyer = Flyer::locatedAt($zip, $street);
 
         return view('flyers.show', compact('flyer'));
 
+    }
+
+    /**
+     * Apply photo to the referenced flyer.
+     * @param $zip
+     * @param $street
+     * @param Request $request
+     */
+    public function addPhoto($zip, $street, Request $request){
+
+        //confirmtion that the photo file will be in appropriate format types
+        $this->validate($request, [
+            'photo' => 'required|mimes:jpg,jpeg,png,bmp'
+        ]);
+
+        //build up our photo instance taking the file from dropzone plugin
+        $photo = Photo::fromForm($request->file('photo'));
+
+        //adding photo to our Flyer Id
+        Flyer::locatedAt($zip, $street)->addPhoto($photo);
     }
 
     /**

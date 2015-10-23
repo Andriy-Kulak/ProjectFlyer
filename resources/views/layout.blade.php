@@ -6,6 +6,7 @@
     <title>Project Flyer</title>
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="/css/libs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/dropzone.css">
 
 
     <link rel="stylesheet" href="{{URL::asset('/css/app.css')}}" type="text/css">
@@ -39,6 +40,10 @@
     <div class="container">
         @yield('content')
     </div>
+
+    @yield('scripts.footer')
+
+
 
     <!-- sweetalert js library !-->
     <script src="/js/libs.js"></script>

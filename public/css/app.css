@@ -5995,3 +5995,11 @@ body {
     padding-top: 70px; }
 
 /*# sourceMappingURL=app.css.map */
+
+body {
+    padding-top: 70px;
+}
+
+img {
+    max-width: 100%;
+}
