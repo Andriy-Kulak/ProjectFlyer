@@ -7,10 +7,20 @@ use App\Http\Requests\FlyerRequest;
 use App\Http\Controllers\Controller;
 use App\Http;
 use App\Photo;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 class FlyersController extends Controller
 {
+
+    /**
+     * Auth checks to make sure you are logged in before making any adjustments
+     */
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['show']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,6 +39,7 @@ class FlyersController extends Controller
     public function create()
     {
         flash()->overlay('Hello World', 'this is the message');
+
         return view('flyers.create');
     }
 
@@ -47,7 +58,8 @@ class FlyersController extends Controller
         //flash messaging
         flash()->success('Success!', 'Your flyer has been created.');
 
-        return redirect()->back();//temporary redirect the landing page
+        return view('pages.home');//temporary redirect the landing page
+
     }
 
     /**
@@ -79,10 +91,22 @@ class FlyersController extends Controller
         ]);
 
         //build up our photo instance taking the file from dropzone plugin
-        $photo = Photo::fromForm($request->file('photo'));
+        $photo = $this->makePhoto($request->file('photo'));
 
-        //adding photo to our Flyer Id
+        //Save photo and associate it with the Flyer
         Flyer::locatedAt($zip, $street)->addPhoto($photo);
+    }
+
+    /**
+     *
+     *
+     * @param UploadedFile $file
+     * @return mixed
+     */
+    protected function makePhoto(UploadedFile $file){
+
+        //get new photo object with current name
+        return Photo::named($file->getClientOriginalName())->move($file);
     }
 
     /**

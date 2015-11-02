@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Flyer extends Model
 {
     /**
-     * fillable fields for a flyer
+     * Fillable fields for a flyer.
      * @var array
      */
     protected $fillable = [
@@ -31,13 +31,19 @@ class Flyer extends Model
     static function locatedAt($zip, $street) {
         $street = str_replace('-', ' ', $street);
 
-        return static::where(compact('zip', 'street'))->first();
+        return static::where(compact('zip', 'street'))->firstorFail();
     }
 
     public function getPriceAttribute($price) {
         return '$' . number_format($price);
     }
 
+    /**
+     * Fetch the relationship and save photo
+     *
+     * @param Photo $photo
+     * @return Model
+     */
     public function addPhoto(Photo $photo){
         return $this->photos()->save($photo);
     }

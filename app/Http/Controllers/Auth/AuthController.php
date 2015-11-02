@@ -21,6 +21,12 @@ class AuthController extends Controller
     |
     */
 
+    /**
+     * Where to redirect upon successful registration.
+     * @var string
+     */
+    protected   $redirectPath = '/flyers/create';
+
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
