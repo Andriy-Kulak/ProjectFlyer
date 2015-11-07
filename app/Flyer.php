@@ -44,15 +44,33 @@ class Flyer extends Model
      * @param Photo $photo
      * @return Model
      */
-    public function addPhoto(Photo $photo){
+    public function addPhoto(Photo $photo) {
         return $this->photos()->save($photo);
     }
 
     /**
      * A flyer is composed of many photos
      */
-    public function photos()
-    {
+    public function photos() {
         return $this->hasMany('App\Photo');
+    }
+
+    /**
+     * A Flyer is owned by a user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner() {
+        return $this->belongsTo('App\User', 'user_id');
+    }
+
+    /**
+     * Determine if the given user created the flyer.
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function ownedBy(User $user) {
+        return $this->user_id == $user->id;
     }
 }

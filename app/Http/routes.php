@@ -2,9 +2,7 @@
 
 
 // Home route
-Route::get('/', function () {
-    return view('pages.home');
-});
+Route::get('/' , 'PagesController@home');
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');

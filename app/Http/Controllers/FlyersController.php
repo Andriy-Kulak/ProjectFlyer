@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 use App\Flyer;
-use Illuminate\Http\Request;
-use App\Http\Requests\FlyerRequest;
-use App\Http\Controllers\Controller;
 use App\Http;
 use App\Photo;
+use App\User;
+use Illuminate\Http\Request;
+use App\Http\Requests\FlyerRequest;
+use App\Http\Controllers\Traits\AuthorizesUsers;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 class FlyersController extends Controller
 {
+    use AuthorizesUsers;
+
 
     /**
      * Auth checks to make sure you are logged in before making any adjustments
@@ -19,6 +22,9 @@ class FlyersController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['show']]);
+
+        //delegating to parent controller
+        parent::__construct();
     }
 
     /**
@@ -53,12 +59,18 @@ class FlyersController extends Controller
     {
 
         //persist the flyer
-        Flyer::create($request->all());
+        //Flyer::create($request->all());
+
+        $flyer = $this->user->publish(
+            new Flyer($request->all())
+        );
 
         //flash messaging
         flash()->success('Success!', 'Your flyer has been created.');
 
-        return view('pages.home');//temporary redirect the landing page
+        //return view('pages.home');//temporary redirect the landing page
+        //return redirect()->back();
+        return redirect($flyer->zip . '/' . str_replace(' ', '-', $flyer->street));
 
     }
 
@@ -78,7 +90,8 @@ class FlyersController extends Controller
     }
 
     /**
-     * Apply photo to the referenced flyer.
+     * Add photo to the referenced flyer. This is triggered when User drops photo
+     * in the Dropzone location.
      * @param $zip
      * @param $street
      * @param Request $request
@@ -86,9 +99,13 @@ class FlyersController extends Controller
     public function addPhoto($zip, $street, Request $request){
 
         //confirmtion that the photo file will be in appropriate format types
-        $this->validate($request, [
-            'photo' => 'required|mimes:jpg,jpeg,png,bmp'
-        ]);
+        $this->validate($request, [ 'photo' => 'required|mimes:jpg,jpeg,png,bmp']);
+
+
+        // if user didn't create the flyer, return with unathorized request
+        if(! $this->userCreatedFlyer($request)) {
+            return $this->unathorized($request);
+        }
 
         //build up our photo instance taking the file from dropzone plugin
         $photo = $this->makePhoto($request->file('photo'));

@@ -5,8 +5,6 @@
  * @param $message
  * @return mixed
  */
-
-
 function flash($title = null, $message = null)
 {
     $flash = app('App\Http\Flash');
@@ -16,3 +14,14 @@ function flash($title = null, $message = null)
     }
     return $flash->info($title, $message);
 }
+
+/**
+ * The path to a given Flyer.
+ *
+ * @param App\Flyer $path
+ * @return string
+
+function flyer_path(Flyer $flyer) {
+    return $flyer->zip .'/'. str_replace(' ', '-', $this->street);
+}
+ */
