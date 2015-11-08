@@ -69,4 +69,16 @@ class Photo extends Model
         ->fit(200)
         ->save($this->thumbnail_path);
     }
+
+    /**
+     * Deletes the photo and thumbnail files in public/flyer/photos folder
+     */
+    public function delete() {
+        \File::delete([
+            $this->path,
+            $this->thumbnail_path
+        ]);
+        parent::delete();
+    }
+
 }

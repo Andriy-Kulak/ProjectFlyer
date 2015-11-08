@@ -5992,7 +5992,9 @@ button.close {
         display: none !important; } }
 
 body {
-    padding-top: 70px; }
+    padding-top: 70px;
+
+}
 
 /*# sourceMappingURL=app.css.map */
 
@@ -6007,3 +6009,7 @@ img {
 .gallery__image {
     margin-bottom: 1em;
 }
+
+.background-image-1 {
+    background-image: url(/backgroundImage/test1.png);
+     }

@@ -1,8 +1,9 @@
 <?php
 
-
-// Home route
+// Home, Contact Us and About route
 Route::get('/' , 'PagesController@home');
+Route::get('/contactus', 'PagesController@contactus');
+Route::get('/about', 'PagesController@about');
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
@@ -21,3 +22,5 @@ Route::get('{zip}/{street}', 'FlyersController@show');
 
 // Named route store_photo_path
 Route::post('{zip}/{street}/photos', ['as' => 'store_photo_path', 'uses' => 'FlyersController@addPhoto']);
+
+Route::delete('photos/{id}', 'FlyersController@destroyPhoto');

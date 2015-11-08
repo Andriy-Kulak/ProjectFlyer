@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Flyer;
 use App\Http;
 use App\Photo;
-use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\FlyerRequest;
 use App\Http\Controllers\Traits\AuthorizesUsers;
@@ -44,7 +43,7 @@ class FlyersController extends Controller
      */
     public function create()
     {
-        flash()->overlay('Hello World', 'this is the message');
+        flash()->overlay('Welcome!', 'Fill out the form to create your house flyer.');
 
         return view('flyers.create');
     }
@@ -66,7 +65,7 @@ class FlyersController extends Controller
         );
 
         //flash messaging
-        flash()->success('Success!', 'Your flyer has been created.');
+        flash()->success('Success!', 'Your flyer has been created.', "info");
 
         //return view('pages.home');//temporary redirect the landing page
         //return redirect()->back();
@@ -126,37 +125,10 @@ class FlyersController extends Controller
         return Photo::named($file->getClientOriginalName())->move($file);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+    public function destroyPhoto($id){
+        Photo::findOrFail($id)->delete;
+        return view('flyers.show', compact('flyer'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
