@@ -3,6 +3,7 @@
 
 @section('content')
 
+
     <div class="row">
         <div class="col-md-4">
             <!-- flyer street !-->
@@ -42,16 +43,23 @@
 
             <!-- If user is signed in and accessing his flyer, only then will Dropzone be available !-->
             @if ($user && $user->owns($flyer))
-                <hr>
 
-                <h2> Add Your Photos</h2>
-                <!-- Dropzone Js Plugin where users can drop their photos !-->
-                <form id="addPhotosForm"
-                      action="{{ route('store_photo_path', [$flyer->zip, $flyer->street]) }}"
-                      method="POST"
-                      class="dropzone">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                </form>
+                <div ng-app="photoToggle" ng-controller="photoController">
+                    <button ng-click="photoZone = false" ng-show="photoZone">Hide Photo DropZone</button>
+                    <button ng-click="photoZone = true" ng-show="!photoZone">Show Photo DropZone</button>
+                    <div ng-if="photoZone">
+                        <hr>
+
+                        <h2> Add Your Photos</h2>
+                        <!-- Dropzone Js Plugin where users can drop their photos !-->
+                        <form id="addPhotosForm"
+                              action="{{ route('store_photo_path', [$flyer->zip, $flyer->street]) }}"
+                              method="POST"
+                              class="dropzone">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        </form>
+                    </div>
+                </div>
             @endif
 
         </div>
@@ -67,10 +75,21 @@
             });
         });
     </script>
+
+    <!-- Angular script to show/hide Dropzone !-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.min.js"></script>
+    <script>
+        angular.module('photoToggle', [])
+                .controller('photoController',['$scope', function($scope){
+            $scope.photoZone = true;
+        }])
+    </script>
+
 @stop
 
 @section('scripts.footer')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/dropzone.js"></script>
+
 
 
     <!-- Dropzone Js configurations for the plugin above !-->
@@ -82,4 +101,8 @@
         }
     </script>
 @stop
+
+
+
+
 
